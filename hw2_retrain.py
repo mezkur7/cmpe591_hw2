@@ -140,3 +140,128 @@ np.array(rps_per_episode).tofile("rps_per_episode_2500-5000.npy")
 torch.save(policy_net.state_dict(), "policy_net_2500-5000.pth")
 torch.save(target_net.state_dict(), "target_net_2500-5000.pth")
 torch.save(optimizer.state_dict(), "optimizer_2500-5000.pth")
+
+
+def train():
+    epsilon = EPSILON
+    epsilon_decay_counter = 0
+    rewards_per_episode = []
+    rps_per_episode = []
+    START_EPISODE = 2500
+
+    for episode in range(START_EPISODE, NUM_EPISODES):
+        env.reset()
+        state = env.high_level_state()
+        done = False
+        total_reward = 0
+        steps = 0
+
+        while not done:
+            action = select_action(state, epsilon)
+            next_state, reward, is_terminal, is_truncated = env.step(action)
+            next_state = env.high_level_state()
+            done = is_terminal or is_truncated
+            replay_buffer.append((state, action, reward, next_state, done))
+            state = next_state
+            total_reward += reward
+            steps += 1
+
+            if steps % UPDATE_FREQ == 0:
+                train_dqn()
+
+            if epsilon_decay_counter % EPSILON_DECAY_ITER == 0:
+                epsilon = max(EPSILON_MIN, epsilon * EPSILON_DECAY)
+            epsilon_decay_counter += 1
+
+        if episode % TARGET_NETWORK_UPDATE_FREQ == 0:
+            target_net.load_state_dict(policy_net.state_dict())
+
+        rewards_per_episode.append(total_reward)
+        rps_per_episode.append(total_reward / steps)
+        print(f"Episode {episode}: Reward={total_reward:.2f}, RPS={total_reward/steps:.4f}")
+
+    # Save results
+    plt.plot(rewards_per_episode[1:])
+    plt.xlabel("Episode")
+    plt.ylabel("Total Reward")
+    plt.title("Reward per Episode")
+    plt.show()
+
+    plt.plot(rps_per_episode)
+    plt.xlabel("Episode")
+    plt.ylabel("Reward per Step (RPS)")
+    plt.title("RPS per Episode")
+    plt.show()
+
+    np.array(rewards_per_episode).tofile("rewards_per_episode_2500-5000.npy")
+    np.array(rps_per_episode).tofile("rps_per_episode_2500-5000.npy")
+    torch.save(policy_net.state_dict(), "policy_net_2500-5000.pth")
+    torch.save(target_net.state_dict(), "target_net_2500-5000.pth")
+    torch.save(optimizer.state_dict(), "optimizer_2500-5000.pth")
+
+
+def load_models(policy_path, target_path):
+    """Loads trained policy and target models."""
+    policy_net = torch.load(policy_path)
+    target_net = torch.load(target_path)
+    policy_net.eval()
+    target_net.eval()
+    return policy_net, target_net
+
+
+def test_dqn(policy_net, n_episodes=50, n_actions=8, render=False):
+    """Runs the trained DQN model and evaluates performance."""
+    env = Hw2Env(n_actions=n_actions, render_mode="gui" if render else "offscreen")
+    total_rewards = []
+    rps_values = []
+
+    for episode in range(n_episodes):
+        state = env.reset()
+        done = False
+        total_reward = 0
+        steps = 0
+
+        while not done:
+            state_tensor = torch.FloatTensor(state).unsqueeze(0)
+            with torch.no_grad():
+                action = torch.argmax(policy_net(state_tensor)).item()
+
+            next_state, reward, is_terminal, is_truncated = env.step(action)
+            done = is_terminal or is_truncated
+            total_reward += reward
+            steps += 1
+            state = next_state
+
+        total_rewards.append(total_reward)
+        rps_values.append(total_reward / steps if steps > 0 else 0)
+        print(f"Episode {episode + 1}: Reward={total_reward:.2f}, RPS={total_reward/steps:.4f}")
+
+    env.close()
+    return total_rewards, rps_values
+
+# Plot results
+
+
+def plot_test_results(total_rewards, rps_values):
+    """Plots the reward and RPS values for the test episodes."""
+    plt.figure(figsize=(10, 5))
+    plt.plot(total_rewards, label="Total Reward per Episode", color='blue')
+    plt.xlabel("Episode")
+    plt.ylabel("Total Reward")
+    plt.title("DQN Model Test: Reward per Episode")
+    plt.legend()
+    plt.show()
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(rps_values, label="Reward per Step (RPS)", color='red')
+    plt.xlabel("Episode")
+    plt.ylabel("RPS")
+    plt.title("DQN Model Test: RPS per Episode")
+    plt.legend()
+    plt.show()
+
+
+def test():
+    policy_net, target_net = load_models("policy_net_2500-5000.pth", "target_net_2500-5000.pth")
+    total_rewards, rps_values = test_dqn(policy_net, n_episodes=50, n_actions=8, render=False)
+    plot_test_results(total_rewards, rps_values)
