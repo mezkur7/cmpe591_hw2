@@ -13,6 +13,7 @@ After Deadline extension
 
 
 Before Extension
+
 Since my computer is very slow at calculating the episodes I had to lower the number of splits/steps in an episode. The performance could be better but I wanted to share the results of my experimentation.
 
 2500 episodes with n_splits=10(parameter in step function in homework2.py file)
