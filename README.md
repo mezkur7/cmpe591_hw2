@@ -2,6 +2,14 @@
 
 After Deadline extension
 
+Important files:
+hw2.py  
+smoothing.ipynb  
+policy_net_10000.pth  
+target_net_10000.pth  
+rps_per_episode.npy  
+rewards_per_episode.npy  
+
 10000 episodes with n_splits=30 
 
 ![Figure_1_10000](https://github.com/user-attachments/assets/e50384f2-2e9b-4b64-b436-fdefa8baf1ad)
@@ -24,7 +32,6 @@ Episode 5: Reward=2.92, RPS=0.0584
 ![Figure_2_test](https://github.com/user-attachments/assets/1fd2052a-17d4-4f48-8258-21636c0bd0ee)
 
 I believe some action results are still not that well. But the overall performance is very good.
-
 
 Before Extension
 
