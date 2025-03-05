@@ -1,5 +1,18 @@
 # cmpe591_hw2
 
+After Deadline extension
+
+10000 episodes with n_splits=30 
+
+![Figure_1_10000](https://github.com/user-attachments/assets/e50384f2-2e9b-4b64-b436-fdefa8baf1ad)
+![Figure_2_10000](https://github.com/user-attachments/assets/6dc4c175-3b74-47cd-bb98-689c1dbb3813)
+
+![image](https://github.com/user-attachments/assets/74cb3747-616a-4626-9e18-352666376dfe)
+![image](https://github.com/user-attachments/assets/532cce9d-ea4a-4ec6-af99-be0e75f35d26)
+
+
+
+Before Extension
 Since my computer is very slow at calculating the episodes I had to lower the number of splits/steps in an episode. The performance could be better but I wanted to share the results of my experimentation.
 
 2500 episodes with n_splits=10(parameter in step function in homework2.py file)
@@ -29,6 +42,10 @@ Since my computer is very slow at calculating the episodes I had to lower the nu
 
 ![image](https://github.com/user-attachments/assets/847a0d37-9237-428b-bcaf-d143613fdd8a)
 ![image](https://github.com/user-attachments/assets/12bd9f26-2ba4-415b-9146-3a63ba139ef5)
+
+After the deadline extension
+
+10000 
 
 
 Hyperparameter Set
