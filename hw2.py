@@ -19,7 +19,7 @@ UPDATE_FREQ = 10
 TARGET_NETWORK_UPDATE_FREQ = 50
 BUFFER_LENGTH = 100000
 N_ACTIONS = 8
-NUM_EPISODES = 5000
+NUM_EPISODES = 10000
 
 # Define the DQN Model
 
@@ -44,7 +44,7 @@ env = Hw2Env(n_actions=N_ACTIONS, render_mode="offscreen")
 policy_net = DQN(input_dim=6, output_dim=N_ACTIONS).to(torch.device("cpu"))
 target_net = DQN(input_dim=6, output_dim=N_ACTIONS).to(torch.device("cpu"))
 target_net.load_state_dict(policy_net.state_dict())
-torch.set_num_threads(torch.get_num_threads() * 2)
+torch.set_num_threads(torch.get_num_threads() * 4)
 
 optimizer = optim.AdamW(policy_net.parameters(), lr=LEARNING_RATE)
 policy_net = torch.jit.script(policy_net)
@@ -83,6 +83,7 @@ def train_dqn():
     optimizer.step()
 
 
+""" 
 # Training Loop
 epsilon = EPSILON
 epsilon_decay_counter = 0
@@ -121,7 +122,7 @@ for episode in range(NUM_EPISODES):
     print(f"Episode {episode}: Reward={total_reward:.2f}, RPS={total_reward/steps:.4f}")
 
 # Save results
-plt.plot(rewards_per_episode[1:])
+plt.plot(rewards_per_episode)
 plt.xlabel("Episode")
 plt.ylabel("Total Reward")
 plt.title("Reward per Episode")
@@ -134,11 +135,12 @@ plt.ylabel("Reward per Step (RPS)")
 plt.title("RPS per Episode")
 plt.show()
 
-np.array(rewards_per_episode).tofile("rewards_per_episode_5000.npy")
-np.array(rps_per_episode).tofile("rps_per_episode_5000.npy")
-torch.save(policy_net.state_dict(), "policy_net_5000.pth")
-torch.save(target_net.state_dict(), "target_net_5000.pth")
-torch.save(optimizer.state_dict(), "optimizer_5000.pth")
+np.array(rewards_per_episode).tofile("rewards_per_episode_10000.npy")
+np.array(rps_per_episode).tofile("rps_per_episode_10000.npy")
+torch.save(policy_net.state_dict(), "policy_net_10000.pth")
+torch.save(target_net.state_dict(), "target_net_10000.pth")
+torch.save(optimizer.state_dict(), "optimizer_10000.pth") 
+"""
 
 
 def train():
@@ -179,7 +181,7 @@ def train():
         print(f"Episode {episode}: Reward={total_reward:.2f}, RPS={total_reward/steps:.4f}")
 
     # Save results
-    plt.plot(rewards_per_episode[1:])
+    plt.plot(rewards_per_episode)
     plt.xlabel("Episode")
     plt.ylabel("Total Reward")
     plt.title("Reward per Episode")
@@ -191,17 +193,19 @@ def train():
     plt.title("RPS per Episode")
     plt.show()
 
-    np.array(rewards_per_episode).tofile("rewards_per_episode_5000.npy")
-    np.array(rps_per_episode).tofile("rps_per_episode_5000.npy")
-    torch.save(policy_net.state_dict(), "policy_net_5000.pth")
-    torch.save(target_net.state_dict(), "target_net_5000.pth")
-    torch.save(optimizer.state_dict(), "optimizer_5000.pth")
+    np.array(rewards_per_episode).tofile("rewards_per_episode_10000.npy")
+    np.array(rps_per_episode).tofile("rps_per_episode_10000.npy")
+    torch.save(policy_net.state_dict(), "policy_net_10000.pth")
+    torch.save(target_net.state_dict(), "target_net_10000.pth")
+    torch.save(optimizer.state_dict(), "optimizer_10000.pth")
 
 
 def load_models(policy_path, target_path):
     """Loads trained policy and target models."""
-    policy_net = torch.load(policy_path)
-    target_net = torch.load(target_path)
+    policy_net = DQN(input_dim=6, output_dim=N_ACTIONS).to(torch.device("cpu"))
+    target_net = DQN(input_dim=6, output_dim=N_ACTIONS).to(torch.device("cpu"))
+    policy_net.load_state_dict(torch.load("policy_net_10000.pth"))
+    target_net.load_state_dict(torch.load("target_net_10000.pth"))
     policy_net.eval()
     target_net.eval()
     return policy_net, target_net
@@ -214,7 +218,8 @@ def test_dqn(policy_net, n_episodes=50, n_actions=8, render=False):
     rps_values = []
 
     for episode in range(n_episodes):
-        state = env.reset()
+        env.reset()
+        state = env.high_level_state()
         done = False
         total_reward = 0
         steps = 0
@@ -260,6 +265,6 @@ def plot_test_results(total_rewards, rps_values):
 
 
 def test():
-    policy_net, target_net = load_models("policy_net_5000.pth", "target_net_5000.pth")
+    policy_net, target_net = load_models("policy_net_10000.pth", "target_net_10000.pth")
     total_rewards, rps_values = test_dqn(policy_net, n_episodes=50, n_actions=8, render=False)
     plot_test_results(total_rewards, rps_values)
