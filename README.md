@@ -10,6 +10,20 @@ After Deadline extension
 ![image](https://github.com/user-attachments/assets/74cb3747-616a-4626-9e18-352666376dfe)
 ![image](https://github.com/user-attachments/assets/532cce9d-ea4a-4ec6-af99-be0e75f35d26)
 
+Limited Test result
+
+My training ended this morning.
+A little run I had:
+
+Episode 1: Reward=28.44, RPS=0.5687
+Episode 2: Reward=37.38, RPS=0.7476
+Episode 3: Reward=38.93, RPS=0.7786
+Episode 4: Reward=8.20, RPS=0.1640
+Episode 5: Reward=2.92, RPS=0.0584
+![Figure_1_test](https://github.com/user-attachments/assets/aef37c6b-11b9-4500-9d9a-37ca6a7b8ee2)
+![Figure_2_test](https://github.com/user-attachments/assets/1fd2052a-17d4-4f48-8258-21636c0bd0ee)
+
+I believe some action results are still not that well. But the overall performance is very good.
 
 
 Before Extension
