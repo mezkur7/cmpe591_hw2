@@ -15,11 +15,11 @@ Limited Test result
 My training ended this morning.
 A little run I had:
 
-Episode 1: Reward=28.44, RPS=0.5687
-Episode 2: Reward=37.38, RPS=0.7476
-Episode 3: Reward=38.93, RPS=0.7786
-Episode 4: Reward=8.20, RPS=0.1640
-Episode 5: Reward=2.92, RPS=0.0584
+Episode 1: Reward=28.44, RPS=0.5687  
+Episode 2: Reward=37.38, RPS=0.7476  
+Episode 3: Reward=38.93, RPS=0.7786  
+Episode 4: Reward=8.20, RPS=0.1640  
+Episode 5: Reward=2.92, RPS=0.0584  
 ![Figure_1_test](https://github.com/user-attachments/assets/aef37c6b-11b9-4500-9d9a-37ca6a7b8ee2)
 ![Figure_2_test](https://github.com/user-attachments/assets/1fd2052a-17d4-4f48-8258-21636c0bd0ee)
 
