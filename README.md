@@ -2,7 +2,7 @@
 
 After Deadline extension
 
-Important files:
+Important files:  
 hw2.py  
 smoothing.ipynb  
 policy_net_10000.pth  
